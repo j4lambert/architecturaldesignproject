@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/j4lambert/architecturaldesignproject/architecturaldesignproject.csproj": {}
+    "/Users/j4lambert/Documents/PTW/2026-27/Part III/Supplementary/10-2/architecturaldesignproject/architecturaldesignproject.csproj": {}
   },
   "projects": {
-    "/Users/j4lambert/architecturaldesignproject/architecturaldesignproject.csproj": {
+    "/Users/j4lambert/Documents/PTW/2026-27/Part III/Supplementary/10-2/architecturaldesignproject/architecturaldesignproject.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/j4lambert/architecturaldesignproject/architecturaldesignproject.csproj",
+        "projectUniqueName": "/Users/j4lambert/Documents/PTW/2026-27/Part III/Supplementary/10-2/architecturaldesignproject/architecturaldesignproject.csproj",
         "projectName": "architecturaldesignproject",
-        "projectPath": "/Users/j4lambert/architecturaldesignproject/architecturaldesignproject.csproj",
+        "projectPath": "/Users/j4lambert/Documents/PTW/2026-27/Part III/Supplementary/10-2/architecturaldesignproject/architecturaldesignproject.csproj",
         "packagesPath": "/Users/j4lambert/.nuget/packages/",
-        "outputPath": "/Users/j4lambert/architecturaldesignproject/obj/",
+        "outputPath": "/Users/j4lambert/Documents/PTW/2026-27/Part III/Supplementary/10-2/architecturaldesignproject/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/j4lambert/.nuget/NuGet/NuGet.Config"

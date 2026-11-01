@@ -47,13 +47,7 @@ public interface IPluginManager
 
 public enum PluginStatus
 {
-    NotLoaded,
-    Loading,
-    Loaded,
-    Running,
-    Stopping,
-    Stopped,
-    Error
+    NotLoaded, Loading, Loaded, Running, Stopping, Stopped, Error
 }
 
 public interface ILogger
@@ -72,9 +66,7 @@ public interface IContentProcessor : IPlugin
 {
     IEnumerable<string> SupportedContentTypes { get; }
     Task<bool> CanProcessAsync(ContentItem content);
-    Task<ProcessingResult> ProcessContentAsync(
-        ContentItem content,
-        ProcessingOptions options);
+    Task<ProcessingResult> ProcessContentAsync(ContentItem content, ProcessingOptions options);
     Task<ValidationResult> ValidateContentAsync(ContentItem content);
 }
 
@@ -95,63 +87,31 @@ public interface IAnalyticsEngine : IPlugin
     Task<IEnumerable<AnalyticsInsight>> GetInsightsAsync(string contentID);
 }
 
-public sealed record ContentItem(
-    string ID,
-    string ContentType,
-    byte[] Data,
-    IReadOnlyDictionary<string, string>? Metadata = null);
+public sealed record ContentItem(string ID, string ContentType, byte[] Data, IReadOnlyDictionary<string, string>? Metadata = null);
 
-public sealed record ProcessingOptions(
-    bool ValidateBeforeProcessing = true);
+public sealed record ProcessingOptions(bool ValidateBeforeProcessing = true);
 
-public sealed record ProcessingResult(
-    bool Succeeded,
-    byte[]? ProcessedData = null,
-    string? OutputContentID = null,
-    string? ErrorMessage = null);
+public sealed record ProcessingResult(bool Succeeded, byte[]? ProcessedData = null, string? OutputContentID = null, string? ErrorMessage = null);
 
 [Flags]
 public enum StorageCapabilities
 {
-    None = 0,
-    Read = 1,
-    Write = 2,
-    Delete = 4,
-    Statistics = 8
+    None = 0, Read = 1, Write = 2, Delete = 4, Statistics = 8
 }
 
-public sealed record StorageOptions(
-    string? Container = null,
-    bool OverwriteExisting = false);
+public sealed record StorageOptions(string? Container = null, bool OverwriteExisting = false);
 
-public sealed record RevealOptions(
-    bool IncludeMetadata = true);
+public sealed record RevealOptions(bool IncludeMetadata = true);
 
-public sealed record StorageStatistics(
-    long ItemCount,
-    long TotalBytes);
+public sealed record StorageStatistics(long ItemCount,long TotalBytes);
 
-public sealed record AnalysisQuery(
-    IReadOnlyCollection<string> Metrics,
-    string? ContentID = null,
-    DateTimeOffset? From = null,
-    DateTimeOffset? To = null);
+public sealed record AnalysisQuery(IReadOnlyCollection<string> Metrics, string? ContentID = null, DateTimeOffset? From = null, DateTimeOffset? To = null);
 
-public sealed record AnalyticsReport(
-    DateTimeOffset GeneratedAt,
-    IReadOnlyDictionary<string, double> Metrics);
+public sealed record AnalyticsReport(DateTimeOffset GeneratedAt, IReadOnlyDictionary<string, double> Metrics);
 
-public sealed record AnalyticsEvent(
-    string Name,
-    DateTimeOffset OccurredAt,
-    string? ContentID = null,
-    string? UserID = null,
-    IReadOnlyDictionary<string, string>? Properties = null);
+public sealed record AnalyticsEvent(string Name, DateTimeOffset OccurredAt,string? ContentID = null, string? UserID = null, IReadOnlyDictionary<string, string>? Properties = null);
 
-public sealed record AnalyticsInsight(
-    string Description,
-    string? ContentID = null,
-    double? Confidence = null);
+public sealed record AnalyticsInsight(string Description, string? ContentID = null,double? Confidence = null);
 
 public abstract class PluginBase : IPlugin
 {
@@ -168,17 +128,11 @@ public abstract class PluginBase : IPlugin
     protected IPluginContext? Context { get; private set; }
 
     protected ILogger Logger =>
-        Context?.Logger ?? throw new InvalidOperationException(
-            $"Plugin {Name} has no initialized context.");
+        Context?.Logger ?? throw new InvalidOperationException($"Plugin {Name} has no initialized context.");
 
     protected PluginStatus Status { get; private set; } = PluginStatus.NotLoaded;
 
-    protected PluginBase(
-        string id,
-        string name,
-        string version,
-        string description,
-        string author)
+    protected PluginBase(string id, string name, string version, string description, string author)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
@@ -309,15 +263,7 @@ public abstract class ContentProcessorBase : PluginBase, IContentProcessor
 {
     public abstract IEnumerable<string> SupportedContentTypes { get; }
 
-    protected ContentProcessorBase(
-        string id,
-        string name,
-        string version,
-        string description,
-        string author)
-        : base(id, name, version, description, author)
-    {
-    }
+    protected ContentProcessorBase(string id, string name, string version, string description, string author):base(id, name, version, description, author){}
 
     public Task<bool> CanProcessAsync(ContentItem content)
     {
@@ -325,9 +271,7 @@ public abstract class ContentProcessorBase : PluginBase, IContentProcessor
         ArgumentNullException.ThrowIfNull(content);
 
         return Task.FromResult(
-            SupportedContentTypes.Contains(
-                content.ContentType,
-                StringComparer.OrdinalIgnoreCase));
+            SupportedContentTypes.Contains(content.ContentType, StringComparer.OrdinalIgnoreCase));
     }
 
     public abstract Task<ProcessingResult> ProcessContentAsync(
@@ -342,22 +286,14 @@ public abstract class ContentProcessorBase : PluginBase, IContentProcessor
         return await ValidateContentImplementationAsync(content);
     }
 
-    protected abstract Task<ValidationResult> ValidateContentImplementationAsync(
-        ContentItem content);
+    protected abstract Task<ValidationResult> ValidateContentImplementationAsync(ContentItem content);
 }
 
 public sealed class TextContentProcessor : ContentProcessorBase
 {
-    public override IEnumerable<string> SupportedContentTypes { get; } =
-        new[] { "text/plain", "text/markdown", "text/html" };
+    public override IEnumerable<string> SupportedContentTypes { get; } = new[] { "text/plain", "text/markdown", "text/html" };
 
-    public TextContentProcessor()
-        : base(
-            "text-processor",
-            "Text Content Processor",
-            "1.0.0",
-            "Processes text content.",
-            "TechFlow")
+    public TextContentProcessor():base("text-processor", "Text Content Processor", "1.0.0", "Processes text content.", "TechFlow")
     {
     }
 
@@ -373,29 +309,22 @@ public sealed class TextContentProcessor : ContentProcessorBase
     protected override Task CleanupPluginAsync() =>
         Task.CompletedTask;
 
-    protected override Task<ValidationResult> ValidateContentImplementationAsync(
-        ContentItem content)
+    protected override Task<ValidationResult> ValidateContentImplementationAsync(ContentItem content)
     {
-        if (!SupportedContentTypes.Contains(
-                content.ContentType,
-                StringComparer.OrdinalIgnoreCase))
+        if (!SupportedContentTypes.Contains(content.ContentType, StringComparer.OrdinalIgnoreCase))
         {
-            return Task.FromResult(
-                new ValidationResult($"Unsupported content type: {content.ContentType}"));
+            return Task.FromResult(new ValidationResult($"Unsupported content type: {content.ContentType}"));
         }
 
         if (content.Data.Length == 0)
         {
-            return Task.FromResult(
-                new ValidationResult("Content data cannot be empty."));
+            return Task.FromResult(new ValidationResult("Content data cannot be empty."));
         }
 
         return Task.FromResult(ValidationResult.Success!);
     }
 
-    public override async Task<ProcessingResult> ProcessContentAsync(
-        ContentItem content,
-        ProcessingOptions options)
+    public override async Task<ProcessingResult> ProcessContentAsync(ContentItem content,ProcessingOptions options)
     {
         ValidateInitialized();
         ArgumentNullException.ThrowIfNull(content);
@@ -406,18 +335,14 @@ public sealed class TextContentProcessor : ContentProcessorBase
             var validation = await ValidateContentAsync(content);
             if (validation != ValidationResult.Success)
             {
-                return new ProcessingResult(
-                    Succeeded: false,
-                    ErrorMessage: validation.ErrorMessage);
+                return new ProcessingResult(Succeeded: false, ErrorMessage: validation.ErrorMessage);
             }
         }
 
         var text = Encoding.UTF8.GetString(content.Data);
         var processedData = Encoding.UTF8.GetBytes(text.ToUpperInvariant());
 
-        return new ProcessingResult(
-            Succeeded: true,
-            ProcessedData: processedData);
+        return new ProcessingResult(Succeeded: true, ProcessedData: processedData);
     }
 }
 
@@ -425,30 +350,15 @@ public sealed class InMemoryStorageProvider : PluginBase, IStorageProvider
 {
     private readonly Dictionary<string, ContentItem> _items = new();
 
-    public StorageCapabilities Capabilities =>
-        StorageCapabilities.Read |
-        StorageCapabilities.Write |
-        StorageCapabilities.Delete |
-        StorageCapabilities.Statistics;
+    public StorageCapabilities Capabilities => StorageCapabilities.Read | StorageCapabilities.Write | StorageCapabilities.Delete |StorageCapabilities.Statistics;
 
-    public InMemoryStorageProvider()
-        : base(
-            "memory-storage",
-            "In-Memory Storage Provider",
-            "1.0.0",
-            "Stores content in memory for the demo.",
-            "TechFlow")
-    {
-    }
+    public InMemoryStorageProvider():base("memory-storage", "In-Memory Storage Provider", "1.0.0", "Stores content in memory for the demo.", "TechFlow"){}
 
-    protected override Task<bool> InitializePluginAsync() =>
-        Task.FromResult(true);
+    protected override Task<bool> InitializePluginAsync() => Task.FromResult(true);
 
-    protected override Task<bool> StartPluginAsync() =>
-        Task.FromResult(true);
+    protected override Task<bool> StartPluginAsync() => Task.FromResult(true);
 
-    protected override Task StopPluginAsync() =>
-        Task.CompletedTask;
+    protected override Task StopPluginAsync() => Task.CompletedTask;
 
     protected override Task CleanupPluginAsync()
     {
@@ -456,9 +366,7 @@ public sealed class InMemoryStorageProvider : PluginBase, IStorageProvider
         return Task.CompletedTask;
     }
 
-    public Task<string> StoreContentAsync(
-        ContentItem content,
-        StorageOptions options)
+    public Task<string> StoreContentAsync(ContentItem content, StorageOptions options)
     {
         ValidateInitialized();
         ArgumentNullException.ThrowIfNull(content);
@@ -474,9 +382,7 @@ public sealed class InMemoryStorageProvider : PluginBase, IStorageProvider
         return Task.FromResult(id);
     }
 
-    public Task<ContentItem?> RetrieveContentAsync(
-        string contentID,
-        RevealOptions options)
+    public Task<ContentItem?> RetrieveContentAsync(string contentID, RevealOptions options)
     {
         ValidateInitialized();
         ArgumentException.ThrowIfNullOrWhiteSpace(contentID);
@@ -509,8 +415,7 @@ public sealed class InMemoryStorageProvider : PluginBase, IStorageProvider
         ValidateInitialized();
 
         var totalBytes = _items.Values.Sum(item => (long)item.Data.Length);
-        return Task.FromResult(
-            new StorageStatistics(_items.Count, totalBytes));
+        return Task.FromResult(new StorageStatistics(_items.Count, totalBytes));
     }
 }
 
@@ -521,15 +426,7 @@ public sealed class BasicAnalyticsEngine : PluginBase, IAnalyticsEngine
     public IEnumerable<string> SupportedMetrics { get; } =
         new[] { "views", "engagement", "performance", "errors", "TotalEvents" };
 
-    public BasicAnalyticsEngine()
-        : base(
-            "basic-analytics",
-            "Basic Analytics Engine",
-            "1.0.0",
-            "Provides simple in-memory analytics.",
-            "TechFlow")
-    {
-    }
+    public BasicAnalyticsEngine():base("basic-analytics", "Basic Analytics Engine", "1.0.0", "Provides simple in-memory analytics.", "TechFlow"){}
 
     protected override Task<bool> InitializePluginAsync() =>
         Task.FromResult(true);
@@ -560,34 +457,20 @@ public sealed class BasicAnalyticsEngine : PluginBase, IAnalyticsEngine
         ValidateInitialized();
         ArgumentNullException.ThrowIfNull(query);
 
-        if (query.From is not null &&
-            query.To is not null &&
-            query.From > query.To)
+        if (query.From is not null && query.To is not null && query.From > query.To)
         {
-            throw new ArgumentException(
-                "The query start time must be earlier than its end time.",
-                nameof(query));
+            throw new ArgumentException("The query start time must be earlier than its end time.", nameof(query));
         }
 
         var events = FilterEvents(query).ToList();
-        var metrics = new Dictionary<string, double>(
-            StringComparer.OrdinalIgnoreCase);
+        var metrics = new Dictionary<string, double>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var metric in query.Metrics)
         {
-            metrics[metric] = string.Equals(
-                metric,
-                "TotalEvents",
-                StringComparison.OrdinalIgnoreCase)
-                ? events.Count
-                : events.Count(e => string.Equals(
-                    e.Name,
-                    metric,
-                    StringComparison.OrdinalIgnoreCase));
+            metrics[metric] = string.Equals(metric, "TotalEvents",StringComparison.OrdinalIgnoreCase) ? events.Count:events.Count(e => string.Equals(e.Name, metric, StringComparison.OrdinalIgnoreCase));
         }
 
-        return Task.FromResult(
-            new AnalyticsReport(DateTimeOffset.UtcNow, metrics));
+        return Task.FromResult(new AnalyticsReport(DateTimeOffset.UtcNow, metrics));
     }
 
     public Task<IEnumerable<AnalyticsInsight>> GetInsightsAsync(string contentID)
@@ -595,41 +478,28 @@ public sealed class BasicAnalyticsEngine : PluginBase, IAnalyticsEngine
         ValidateInitialized();
         ArgumentException.ThrowIfNullOrWhiteSpace(contentID);
 
-        var count = _events.Count(e =>
-            string.Equals(e.ContentID, contentID, StringComparison.Ordinal));
+        var count = _events.Count(e => string.Equals(e.ContentID, contentID, StringComparison.Ordinal));
 
-        IEnumerable<AnalyticsInsight> insights = count == 0
-            ? Array.Empty<AnalyticsInsight>()
-            : new[]
+        IEnumerable<AnalyticsInsight> insights = count == 0 ? Array.Empty<AnalyticsInsight>():new[]
             {
-                new AnalyticsInsight(
-                    $"Recorded {count} analytics event(s).",
-                    contentID)
+                new AnalyticsInsight($"Recorded {count} analytics event(s).", contentID)
             };
 
         return Task.FromResult(insights);
     }
 
-    private IEnumerable<AnalyticsEvent> FilterEvents(AnalysisQuery query) =>
-        _events.Where(e =>
-            (query.ContentID is null || e.ContentID == query.ContentID) &&
-            (query.From is null || e.OccurredAt >= query.From) &&
-            (query.To is null || e.OccurredAt <= query.To));
+    private IEnumerable<AnalyticsEvent> FilterEvents(AnalysisQuery query) => _events.Where(e => (query.ContentID is null || e.ContentID == query.ContentID) && (query.From is null || e.OccurredAt >= query.From) && (query.To is null || e.OccurredAt <= query.To));
 }
 
 public sealed class PluginManager : IPluginManager
 {
-    private readonly Dictionary<string, IPlugin> _loadedPlugins =
-        new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, IPlugin> _loadedPlugins = new(StringComparer.OrdinalIgnoreCase);
 
     private readonly ILogger _logger;
     private readonly IServiceProvider _serviceProvider;
     private readonly IConfiguration _configuration;
 
-    public PluginManager(
-        ILogger logger,
-        IServiceProvider serviceProvider,
-        IConfiguration configuration)
+    public PluginManager(ILogger logger, IServiceProvider serviceProvider, IConfiguration configuration)
     {
         _logger = logger;
         _serviceProvider = serviceProvider;
@@ -661,11 +531,7 @@ public sealed class PluginManager : IPluginManager
             return false;
         }
 
-        var context = new PluginContext(
-            $"/plugins/{plugin.ID}",
-            _logger,
-            _configuration,
-            _serviceProvider);
+        var context = new PluginContext($"/plugins/{plugin.ID}", _logger, _configuration, _serviceProvider);
 
         var initialized = await plugin.InitializeAsync(context);
         if (!initialized)
@@ -727,10 +593,7 @@ public sealed class PluginManager : IPluginManager
     {
         ArgumentNullException.ThrowIfNull(plugin);
 
-        var valid = !string.IsNullOrWhiteSpace(plugin.ID) &&
-                    !string.IsNullOrWhiteSpace(plugin.Name) &&
-                    !string.IsNullOrWhiteSpace(plugin.Version) &&
-                    !_loadedPlugins.ContainsKey(plugin.ID);
+        var valid = !string.IsNullOrWhiteSpace(plugin.ID) && !string.IsNullOrWhiteSpace(plugin.Name) && !string.IsNullOrWhiteSpace(plugin.Version) && !_loadedPlugins.ContainsKey(plugin.ID);
 
         return Task.FromResult(valid);
     }
@@ -744,26 +607,18 @@ public sealed class PluginContext : IPluginContext
     public IServiceProvider ServiceProvider { get; }
     public IDictionary<string, object> SharedData { get; } = new Dictionary<string, object>();
 
-    public PluginContext(
-        string pluginDirectory,
-        ILogger logger,
-        IConfiguration configuration,
-        IServiceProvider serviceProvider)
+    public PluginContext(string pluginDirectory, ILogger logger, IConfiguration configuration, IServiceProvider serviceProvider)
     {
-        PluginDirectory = pluginDirectory;
-        Logger = logger;
-        Configuration = configuration;
-        ServiceProvider = serviceProvider;
+        PluginDirectory = pluginDirectory; Logger = logger;
+        Configuration = configuration; ServiceProvider = serviceProvider;
     }
 }
 
 public sealed class ConsoleLogger : ILogger
 {
-    public void LogInformation(string message) =>
-        Console.WriteLine($"INFO: {message}");
+    public void LogInformation(string message) => Console.WriteLine($"INFO: {message}");
 
-    public void LogWarning(string message) =>
-        Console.WriteLine($"WARN: {message}");
+    public void LogWarning(string message) => Console.WriteLine($"WARN: {message}");
 
     public void LogError(string message, Exception? exception = null)
     {
@@ -785,8 +640,7 @@ public sealed class DictionaryConfiguration : IConfiguration
         _values = values;
     }
 
-    public string? GetValue(string key) =>
-        _values.TryGetValue(key, out var value) ? value : null;
+    public string? GetValue(string key) => _values.TryGetValue(key, out var value) ? value : null;
 }
 
 public sealed class DemoServiceProvider : IServiceProvider
@@ -798,8 +652,7 @@ public sealed class DemoServiceProvider : IServiceProvider
         _configuration = configuration;
     }
 
-    public object? GetService(Type serviceType) =>
-        serviceType == typeof(IConfiguration) ? _configuration : null;
+    public object? GetService(Type serviceType) => serviceType == typeof(IConfiguration) ? _configuration : null;
 }
 
 public static class Program
@@ -807,8 +660,7 @@ public static class Program
     public static async Task Main()
     {
         var logger = new ConsoleLogger();
-        var configuration = new DictionaryConfiguration(
-            new Dictionary<string, string>());
+        var configuration = new DictionaryConfiguration(new Dictionary<string, string>());
         var services = new DemoServiceProvider(configuration);
         var manager = new PluginManager(logger, services, configuration);
 
@@ -824,19 +676,11 @@ public static class Program
 
         if (processor is not null)
         {
-            var content = new ContentItem(
-                "demo-content",
-                "text/plain",
-                Encoding.UTF8.GetBytes("Hello plugin architecture!"));
+            var content = new ContentItem("demo-content","text/plain", Encoding.UTF8.GetBytes("Hello plugin architecture!"));
 
-            var result = await processor.ProcessContentAsync(
-                content,
-                new ProcessingOptions());
+            var result = await processor.ProcessContentAsync(content, new ProcessingOptions());
 
-            Console.WriteLine(
-                result.Succeeded
-                    ? Encoding.UTF8.GetString(result.ProcessedData!)
-                    : result.ErrorMessage);
+            Console.WriteLine(result.Succeeded ? Encoding.UTF8.GetString(result.ProcessedData!):result.ErrorMessage);
         }
 
         var storage = await manager.GetPluginsByTypeAsync<IStorageProvider>();
@@ -844,14 +688,9 @@ public static class Program
 
         if (storageProvider is not null)
         {
-            var content = new ContentItem(
-                "stored-content",
-                "text/plain",
-                Encoding.UTF8.GetBytes("Stored in memory."));
+            var content = new ContentItem("stored-content", "text/plain", Encoding.UTF8.GetBytes("Stored in memory."));
 
-            var storedID = await storageProvider.StoreContentAsync(
-                content,
-                new StorageOptions());
+            var storedID = await storageProvider.StoreContentAsync(content, new StorageOptions());
 
             Console.WriteLine($"Stored content ID: {storedID}");
         }
@@ -861,17 +700,9 @@ public static class Program
 
         if (analyticsEngine is not null)
         {
-            await analyticsEngine.RecordEventAsync(
-                new AnalyticsEvent(
-                    "views",
-                    DateTimeOffset.UtcNow,
-                    "demo-content",
-                    "demo-user"));
+            await analyticsEngine.RecordEventAsync(new AnalyticsEvent("views",DateTimeOffset.UtcNow, "demo-content", "demo-user"));
 
-            var report = await analyticsEngine.GenerateReportAsync(
-                new AnalysisQuery(
-                    new[] { "views", "TotalEvents" },
-                    ContentID: "demo-content"));
+            var report = await analyticsEngine.GenerateReportAsync(new AnalysisQuery(new[] { "views", "TotalEvents" }, ContentID: "demo-content"));
 
             foreach (var metric in report.Metrics)
             {

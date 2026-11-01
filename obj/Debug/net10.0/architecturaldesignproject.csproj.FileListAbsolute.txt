@@ -12,3 +12,18 @@
 /Users/j4lambert/architecturaldesignproject/obj/Debug/net10.0/architecturaldesignproject.pdb
 /Users/j4lambert/architecturaldesignproject/obj/Debug/net10.0/architecturaldesignproject.genruntimeconfig.cache
 /Users/j4lambert/architecturaldesignproject/obj/Debug/net10.0/ref/architecturaldesignproject.dll
+/Users/j4lambert/Documents/PTW/2026-27/Part III/Supplementary/10-2/architecturaldesignproject/bin/Debug/net10.0/architecturaldesignproject
+/Users/j4lambert/Documents/PTW/2026-27/Part III/Supplementary/10-2/architecturaldesignproject/bin/Debug/net10.0/architecturaldesignproject.deps.json
+/Users/j4lambert/Documents/PTW/2026-27/Part III/Supplementary/10-2/architecturaldesignproject/bin/Debug/net10.0/architecturaldesignproject.runtimeconfig.json
+/Users/j4lambert/Documents/PTW/2026-27/Part III/Supplementary/10-2/architecturaldesignproject/bin/Debug/net10.0/architecturaldesignproject.dll
+/Users/j4lambert/Documents/PTW/2026-27/Part III/Supplementary/10-2/architecturaldesignproject/bin/Debug/net10.0/architecturaldesignproject.pdb
+/Users/j4lambert/Documents/PTW/2026-27/Part III/Supplementary/10-2/architecturaldesignproject/obj/Debug/net10.0/architecturaldesignproject.GeneratedMSBuildEditorConfig.editorconfig
+/Users/j4lambert/Documents/PTW/2026-27/Part III/Supplementary/10-2/architecturaldesignproject/obj/Debug/net10.0/architecturaldesignproject.AssemblyInfoInputs.cache
+/Users/j4lambert/Documents/PTW/2026-27/Part III/Supplementary/10-2/architecturaldesignproject/obj/Debug/net10.0/architecturaldesignproject.AssemblyInfo.cs
+/Users/j4lambert/Documents/PTW/2026-27/Part III/Supplementary/10-2/architecturaldesignproject/obj/Debug/net10.0/architecturaldesignproject.csproj.CoreCompileInputs.cache
+/Users/j4lambert/Documents/PTW/2026-27/Part III/Supplementary/10-2/architecturaldesignproject/obj/Debug/net10.0/architecturaldesignproject.sourcelink.json
+/Users/j4lambert/Documents/PTW/2026-27/Part III/Supplementary/10-2/architecturaldesignproject/obj/Debug/net10.0/architecturaldesignproject.dll
+/Users/j4lambert/Documents/PTW/2026-27/Part III/Supplementary/10-2/architecturaldesignproject/obj/Debug/net10.0/refint/architecturaldesignproject.dll
+/Users/j4lambert/Documents/PTW/2026-27/Part III/Supplementary/10-2/architecturaldesignproject/obj/Debug/net10.0/architecturaldesignproject.pdb
+/Users/j4lambert/Documents/PTW/2026-27/Part III/Supplementary/10-2/architecturaldesignproject/obj/Debug/net10.0/architecturaldesignproject.genruntimeconfig.cache
+/Users/j4lambert/Documents/PTW/2026-27/Part III/Supplementary/10-2/architecturaldesignproject/obj/Debug/net10.0/ref/architecturaldesignproject.dll
